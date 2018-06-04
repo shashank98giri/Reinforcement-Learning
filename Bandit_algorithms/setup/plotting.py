@@ -8,6 +8,7 @@ def plt_initial_distibution(y,hide=False):
     plt.bar(x,y,1/1.6)
     plt.xlabel("Arm")
     plt.ylabel("probality distribution")
+    plt.title("Reward distribution")
     if(hide==False):
         plt.show(fig)
     else :
@@ -19,7 +20,7 @@ def plt_estimate(stats,hide=False):
     plt.plot(stats.cumulative_reward)
     plt.xlabel("Timestep")
     plt.ylabel("cumulative_reward")
-
+    plt.title("Cumulative Reward received")
     if(hide==False):
         plt.show(fig1)
     else :
@@ -28,7 +29,7 @@ def plt_estimate(stats,hide=False):
     plt.plot(stats.regret)
     plt.xlabel("Timestep")
     plt.ylabel("regret")
-
+    plt.title("Cumulative regret")
     if(hide==False):
         plt.show(fig2)
     else :
