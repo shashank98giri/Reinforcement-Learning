@@ -32,7 +32,7 @@ class EpsilonGreedy(Greedy):
         super().__init__(num_actions)
         self.name="EpsilonGreedy"
         self.epsilon=epsilon
-        if(epsilon > 1 || epsilon<0):
+        if(epsilon > 1 or epsilon<0):
             print("Epsilon should be between 0 and 1",flush=True)
             sys.exit(0)
     def act(self):

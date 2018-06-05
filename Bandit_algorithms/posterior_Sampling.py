@@ -7,7 +7,7 @@ from Bandit_algorithms.greedy import Policy
 
 class Posterior(Policy):
     def __init__(self,num_actions):
-        super().__init__(self,num_actions)
+        super().__init__(num_actions)
         self.name="Posterior Sampling"
         self.num_actions=num_actions
         self.total_counts=np.zeros(num_actions,dtype=np.int)
