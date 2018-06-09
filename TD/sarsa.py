@@ -4,7 +4,7 @@ import itertools
 from collections import defaultdict,namedtuple
 from matplotlib import pyplot as plt
 import pandas as pd
-from mpl_toolkits.mplot3d import Axes3D
+
 
 Stats=namedtuple("Stats",["episode_length","episode_rewards"])
 
@@ -26,6 +26,7 @@ class Sarsa(object):
         return A
 
     def learner(self,alpha=0.5):
+        self.q=defaultdict(lambda:np.zeros(self.num_actions))
         stats=Stats(episode_length=np.zeros(self.num_episodes),
         episode_rewards=np.zeros(self.num_episodes))
         epsilon=self.epsilon
@@ -58,6 +59,7 @@ class Sarsa(object):
         return self.q,stats
 
     def TD_lamda(self,alpha=0.5):
+        self.q=defaultdict(lambda:np.zeros(self.num_actions))
         stats=Stats(episode_length=np.zeros(self.num_episodes),
         episode_rewards=np.zeros(self.num_episodes))
         epsilon=self.epsilon
@@ -93,6 +95,7 @@ class Sarsa(object):
         return self.q,stats
 
     def q_learner(self,alpha=0.5):
+        self.q=defaultdict(lambda:np.zeros(self.num_actions))
         stats=Stats(episode_length=np.zeros(self.num_episodes),
         episode_rewards=np.zeros(self.num_episodes))
         epsilon=self.epsilon
