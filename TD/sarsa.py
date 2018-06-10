@@ -58,7 +58,7 @@ class Sarsa(object):
 
         return self.q,stats
 
-    def TD_lamda(self,alpha=0.5):
+    def TD_lamda(self,alpha=0.5,lamda=0):
         self.q=defaultdict(lambda:np.zeros(self.num_actions))
         stats=Stats(episode_length=np.zeros(self.num_episodes),
         episode_rewards=np.zeros(self.num_episodes))
@@ -82,7 +82,7 @@ class Sarsa(object):
                 # TD update
                 for s in range(self.env.nS):
                     self.q[s]+=alpha*(td_error)*E[s]
-                    E[s]*=self.gamma
+                    E[s]*=self.gamma*lamda
 
                 stats.episode_length[episode]=i
                 stats.episode_rewards[episode]+=reward
@@ -165,3 +165,15 @@ Q,stats=sarsa.q_learner()
 sarsa.plot(stats)
 Q,stats=sarsa.TD_lamda()
 sarsa.plot(stats)
+
+# state=(3,0)
+# sarsa.env.reset()
+# while (True):
+#     action=np.argmax(Q[np.ravel_multi_index(state,sarsa.env.shape)])
+#     next_state,_,isdone=sarsa.env.step(action)
+#     next_state=np.unravel_index(next_state,sarsa.env.shape)
+#     print(next_state)
+#     if isdone:
+#         print(str(next_state)+" $")
+#         break
+#     state=next_state
