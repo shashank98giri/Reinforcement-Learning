@@ -58,7 +58,7 @@ class Sarsa(object):
 
         return self.q,stats
 
-    def TD_lamda(self,alpha=0.5,lamda=0):
+    def TD_lamda(self,alpha=0.5,lamda=0.1):
         self.q=defaultdict(lambda:np.zeros(self.num_actions))
         stats=Stats(episode_length=np.zeros(self.num_episodes),
         episode_rewards=np.zeros(self.num_episodes))
@@ -109,7 +109,6 @@ class Sarsa(object):
                 action_prob=self.policy(state,epsilon/(episode+1))
                 action=np.random.choice(np.arange(self.num_actions),p=action_prob)
                 next_state,reward,done=self.env.step(action)
-                next_action_prob=self.policy(next_state,epsilon/(episode+1))
 
                 #next action chosen is by greedy
                 next_action=np.argmax(self.q[next_state])
@@ -130,6 +129,8 @@ class Sarsa(object):
 
 
         return self.q,stats
+
+
 
     def plot(self,s):
         fig=plt.figure(figsize=(12,7))
@@ -154,7 +155,7 @@ class Sarsa(object):
 
 
 
-num_episodes=500
+num_episodes=2000
 num_actions=4
 epsilon=0.1
 gamma=0.9
@@ -165,15 +166,38 @@ Q,stats=sarsa.q_learner()
 sarsa.plot(stats)
 Q,stats=sarsa.TD_lamda()
 sarsa.plot(stats)
+plt.ion()
+fig=plt.figure(figsize=(10,6))
+ax=fig.add_subplot(111)
+ax.set_xticks(np.arange(0.5,12.5,1))
+ax.set_yticks(np.arange(0.5,4.5,1))
+ax.grid(which='major',axis='both',linewidth=2,linestyle='-')
+mat=np.zeros(sarsa.env.shape)
+mat[3,1:-1]=2
+img=ax.imshow(mat,interpolation=None,cmap="viridis")
+fig.canvas.draw()
 
-# state=(3,0)
-# sarsa.env.reset()
-# while (True):
-#     action=np.argmax(Q[np.ravel_multi_index(state,sarsa.env.shape)])
-#     next_state,_,isdone=sarsa.env.step(action)
-#     next_state=np.unravel_index(next_state,sarsa.env.shape)
-#     print(next_state)
-#     if isdone:
-#         print(str(next_state)+" $")
-#         break
-#     state=next_state
+state=(3,0)
+sarsa.env.reset()
+
+for i in range(100):
+    opt=[]
+    for  action in range(sarsa.env.nA):
+        next_state,reward,_=sarsa.env.step(action)
+        opt.append(reward+gamma*(np.amax(Q[next_state])))
+        sarsa.env.s=np.ravel_multi_index(state,sarsa.env.shape)
+    most_opt_action=np.argmax(Q[np.ravel_multi_index(state,sarsa.env.shape,order='C')])
+    next_state,reward,isdone=sarsa.env.step(most_opt_action)
+    mat[state[0],state[1]]=0
+
+    next_state=np.unravel_index(next_state,sarsa.env.shape,order='C')
+    mat[next_state[0],next_state[1]]=1
+
+    ax.imshow(mat,interpolation=None,cmap="viridis")
+    fig.canvas.draw()
+    fig.canvas.flush_events()
+    print(next_state)
+    if isdone:
+        break
+    state=next_state
+plt.show()
